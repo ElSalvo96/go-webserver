@@ -1,6 +1,7 @@
 #!/bin/sh
 
 echo "start the app in watch mode"
-source /app/app.env
+cd app
+source /app.env
 
 reflex -c ./reflex.conf

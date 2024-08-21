@@ -1,13 +1,13 @@
-package api
+package server
 
 import (
-	"go-webserver/internal/api/dogApi"
+	"go-webserver/internal/server/dogApi"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-func (a *api) getFacts(ctx *gin.Context) {
+func (a *Server) getFacts(ctx *gin.Context) {
 	result, err := dogApi.GetFacts()
 
 	if err != nil {

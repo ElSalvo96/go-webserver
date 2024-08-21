@@ -5,7 +5,7 @@ package main
 
 import (
 	"context"
-	"go-webserver/internal/api"
+	"go-webserver/internal/server"
 	"go-webserver/internal/util"
 	"net/http"
 	"os"
@@ -24,7 +24,7 @@ func main() {
 		return
 	}
 
-	server, err := api.CreateServer(cfg)
+	server, err := server.CreateServer(cfg)
 	if err != nil {
 		logrus.Panicf("Server cannot be init %v", err)
 		return

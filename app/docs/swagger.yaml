@@ -1,0 +1,184 @@
+definitions:
+  endpoints.heartbeatOutput:
+    properties:
+      detail:
+        type: string
+      title:
+        type: string
+    type: object
+  endpoints.jsonResponse-endpoints_heartbeatOutput:
+    properties:
+      data:
+        $ref: '#/definitions/endpoints.heartbeatOutput'
+      error:
+        type: boolean
+      message:
+        type: string
+    type: object
+  endpoints.jsonResponse-endpoints_sumOutput:
+    properties:
+      data:
+        $ref: '#/definitions/endpoints.sumOutput'
+      error:
+        type: boolean
+      message:
+        type: string
+    type: object
+  endpoints.jsonResponse-string:
+    properties:
+      data:
+        type: string
+      error:
+        type: boolean
+      message:
+        type: string
+    type: object
+  endpoints.sumInput:
+    properties:
+      num1:
+        type: integer
+      num2:
+        type: integer
+    required:
+    - num1
+    - num2
+    type: object
+  endpoints.sumOutput:
+    properties:
+      result:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/sum:
+    get:
+      consumes:
+      - application/json
+      description: Sum in query string
+      parameters:
+      - description: Number One
+        in: query
+        name: num1
+        required: true
+        type: integer
+      - description: Number Two
+        in: query
+        name: num2
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/endpoints.jsonResponse-endpoints_sumOutput'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/endpoints.jsonResponse-string'
+      summary: Sum in query string
+      tags:
+      - sum
+    post:
+      consumes:
+      - application/json
+      description: Sum as post
+      parameters:
+      - description: body input
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/endpoints.sumInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/endpoints.jsonResponse-endpoints_sumOutput'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/endpoints.jsonResponse-string'
+      summary: Sum as post
+      tags:
+      - sum
+  /api/v1/sum/{num1}:
+    get:
+      consumes:
+      - application/json
+      description: Sum with first number in route path and second in query string
+      parameters:
+      - description: Number One
+        in: path
+        name: num1
+        required: true
+        type: integer
+      - description: Number Two
+        in: query
+        name: num2
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/endpoints.jsonResponse-endpoints_sumOutput'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/endpoints.jsonResponse-string'
+      summary: Sum with first number in route path and second in query string
+      tags:
+      - sum
+  /api/v1/sum/{num1}/{num2}:
+    get:
+      consumes:
+      - application/json
+      description: Sum as route path
+      parameters:
+      - description: Number One
+        in: path
+        name: num1
+        required: true
+        type: integer
+      - description: Number Two
+        in: path
+        name: num2
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/endpoints.jsonResponse-endpoints_sumOutput'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/endpoints.jsonResponse-string'
+      summary: Sum as route path
+      tags:
+      - sum
+  /heartbeat:
+    get:
+      consumes:
+      - application/json
+      description: Heartbeat
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/endpoints.jsonResponse-endpoints_heartbeatOutput'
+      summary: Heartbeat
+      tags:
+      - heartbeat
+swagger: "2.0"

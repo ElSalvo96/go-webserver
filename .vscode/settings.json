@@ -1,3 +1,10 @@
 {
-	"cSpell.words": ["Infof", "logrus"]
+	"cSpell.words": [
+		"godoc",
+		"gonic",
+		"Infof",
+		"logrus",
+		"swaggerfiles",
+		"swaggo"
+	]
 }
