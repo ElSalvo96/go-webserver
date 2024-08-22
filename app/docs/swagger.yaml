@@ -1,30 +1,14 @@
 definitions:
-  endpoints.heartbeatOutput:
-    properties:
-      detail:
-        type: string
-      title:
-        type: string
-    type: object
-  endpoints.jsonResponse-endpoints_heartbeatOutput:
+  Response-SumOutput:
     properties:
       data:
-        $ref: '#/definitions/endpoints.heartbeatOutput'
+        $ref: '#/definitions/SumOutput'
       error:
         type: boolean
       message:
         type: string
     type: object
-  endpoints.jsonResponse-endpoints_sumOutput:
-    properties:
-      data:
-        $ref: '#/definitions/endpoints.sumOutput'
-      error:
-        type: boolean
-      message:
-        type: string
-    type: object
-  endpoints.jsonResponse-string:
+  Response-string:
     properties:
       data:
         type: string
@@ -33,7 +17,7 @@ definitions:
       message:
         type: string
     type: object
-  endpoints.sumInput:
+  SumInput:
     properties:
       num1:
         type: integer
@@ -43,7 +27,7 @@ definitions:
     - num1
     - num2
     type: object
-  endpoints.sumOutput:
+  SumOutput:
     properties:
       result:
         type: integer
@@ -55,7 +39,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Sum in query string
+      description: Handle the sum service using the query string
       parameters:
       - description: Number One
         in: query
@@ -73,44 +57,45 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/endpoints.jsonResponse-endpoints_sumOutput'
+            $ref: '#/definitions/Response-SumOutput'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/endpoints.jsonResponse-string'
-      summary: Sum in query string
+            $ref: '#/definitions/Response-string'
+      summary: Handle the sum service using the query string
       tags:
       - sum
     post:
       consumes:
       - application/json
-      description: Sum as post
+      description: Handle the sum service using the body
       parameters:
       - description: body input
         in: body
         name: input
         required: true
         schema:
-          $ref: '#/definitions/endpoints.sumInput'
+          $ref: '#/definitions/SumInput'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/endpoints.jsonResponse-endpoints_sumOutput'
+            $ref: '#/definitions/Response-SumOutput'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/endpoints.jsonResponse-string'
-      summary: Sum as post
+            $ref: '#/definitions/Response-string'
+      summary: Handle the sum service using the body
       tags:
       - sum
   /api/v1/sum/{num1}:
     get:
       consumes:
       - application/json
-      description: Sum with first number in route path and second in query string
+      description: Handle sum with first number in route path and second in query
+        string
       parameters:
       - description: Number One
         in: path
@@ -128,19 +113,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/endpoints.jsonResponse-endpoints_sumOutput'
+            $ref: '#/definitions/Response-SumOutput'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/endpoints.jsonResponse-string'
-      summary: Sum with first number in route path and second in query string
+            $ref: '#/definitions/Response-string'
+      summary: Handle sum with first number in route path and second in query string
       tags:
       - sum
   /api/v1/sum/{num1}/{num2}:
     get:
       consumes:
       - application/json
-      description: Sum as route path
+      description: Handle the sum service using the route path
       parameters:
       - description: Number One
         in: path
@@ -158,27 +143,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/endpoints.jsonResponse-endpoints_sumOutput'
+            $ref: '#/definitions/Response-SumOutput'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/endpoints.jsonResponse-string'
-      summary: Sum as route path
+            $ref: '#/definitions/Response-string'
+      summary: Handle the sum service using the route path
       tags:
       - sum
-  /heartbeat:
-    get:
-      consumes:
-      - application/json
-      description: Heartbeat
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/endpoints.jsonResponse-endpoints_heartbeatOutput'
-      summary: Heartbeat
-      tags:
-      - heartbeat
 swagger: "2.0"

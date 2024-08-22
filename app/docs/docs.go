@@ -17,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/api/v1/sum": {
             "get": {
-                "description": "Sum in query string",
+                "description": "Handle the sum service using the query string",
                 "consumes": [
                     "application/json"
                 ],
@@ -27,7 +27,7 @@ const docTemplate = `{
                 "tags": [
                     "sum"
                 ],
-                "summary": "Sum in query string",
+                "summary": "Handle the sum service using the query string",
                 "parameters": [
                     {
                         "type": "integer",
@@ -48,19 +48,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.jsonResponse-endpoints_sumOutput"
+                            "$ref": "#/definitions/Response-SumOutput"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.jsonResponse-string"
+                            "$ref": "#/definitions/Response-string"
                         }
                     }
                 }
             },
             "post": {
-                "description": "Sum as post",
+                "description": "Handle the sum service using the body",
                 "consumes": [
                     "application/json"
                 ],
@@ -70,7 +70,7 @@ const docTemplate = `{
                 "tags": [
                     "sum"
                 ],
-                "summary": "Sum as post",
+                "summary": "Handle the sum service using the body",
                 "parameters": [
                     {
                         "description": "body input",
@@ -78,7 +78,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/endpoints.sumInput"
+                            "$ref": "#/definitions/SumInput"
                         }
                     }
                 ],
@@ -86,13 +86,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.jsonResponse-endpoints_sumOutput"
+                            "$ref": "#/definitions/Response-SumOutput"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.jsonResponse-string"
+                            "$ref": "#/definitions/Response-string"
                         }
                     }
                 }
@@ -100,7 +100,7 @@ const docTemplate = `{
         },
         "/api/v1/sum/{num1}": {
             "get": {
-                "description": "Sum with first number in route path and second in query string",
+                "description": "Handle sum with first number in route path and second in query string",
                 "consumes": [
                     "application/json"
                 ],
@@ -110,7 +110,7 @@ const docTemplate = `{
                 "tags": [
                     "sum"
                 ],
-                "summary": "Sum with first number in route path and second in query string",
+                "summary": "Handle sum with first number in route path and second in query string",
                 "parameters": [
                     {
                         "type": "integer",
@@ -131,13 +131,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.jsonResponse-endpoints_sumOutput"
+                            "$ref": "#/definitions/Response-SumOutput"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.jsonResponse-string"
+                            "$ref": "#/definitions/Response-string"
                         }
                     }
                 }
@@ -145,7 +145,7 @@ const docTemplate = `{
         },
         "/api/v1/sum/{num1}/{num2}": {
             "get": {
-                "description": "Sum as route path",
+                "description": "Handle the sum service using the route path",
                 "consumes": [
                     "application/json"
                 ],
@@ -155,7 +155,7 @@ const docTemplate = `{
                 "tags": [
                     "sum"
                 ],
-                "summary": "Sum as route path",
+                "summary": "Handle the sum service using the route path",
                 "parameters": [
                     {
                         "type": "integer",
@@ -176,36 +176,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.jsonResponse-endpoints_sumOutput"
+                            "$ref": "#/definitions/Response-SumOutput"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/endpoints.jsonResponse-string"
-                        }
-                    }
-                }
-            }
-        },
-        "/heartbeat": {
-            "get": {
-                "description": "Heartbeat",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "heartbeat"
-                ],
-                "summary": "Heartbeat",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/endpoints.jsonResponse-endpoints_heartbeatOutput"
+                            "$ref": "#/definitions/Response-string"
                         }
                     }
                 }
@@ -213,22 +190,11 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "endpoints.heartbeatOutput": {
-            "type": "object",
-            "properties": {
-                "detail": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                }
-            }
-        },
-        "endpoints.jsonResponse-endpoints_heartbeatOutput": {
+        "Response-SumOutput": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/endpoints.heartbeatOutput"
+                    "$ref": "#/definitions/SumOutput"
                 },
                 "error": {
                     "type": "boolean"
@@ -238,21 +204,7 @@ const docTemplate = `{
                 }
             }
         },
-        "endpoints.jsonResponse-endpoints_sumOutput": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/endpoints.sumOutput"
-                },
-                "error": {
-                    "type": "boolean"
-                },
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
-        "endpoints.jsonResponse-string": {
+        "Response-string": {
             "type": "object",
             "properties": {
                 "data": {
@@ -266,7 +218,7 @@ const docTemplate = `{
                 }
             }
         },
-        "endpoints.sumInput": {
+        "SumInput": {
             "type": "object",
             "required": [
                 "num1",
@@ -281,7 +233,7 @@ const docTemplate = `{
                 }
             }
         },
-        "endpoints.sumOutput": {
+        "SumOutput": {
             "type": "object",
             "properties": {
                 "result": {

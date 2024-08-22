@@ -1,4 +1,4 @@
-package endpoints
+package handler
 
 import (
 	"net/http"
@@ -10,19 +10,13 @@ type jsonResponse[T any] struct {
 	Error   bool   `json:"error"`
 	Message string `json:"message"`
 	Data    T      `json:"data,omitempty"`
-}
+} // @name Response
 
-type validationInput struct {
-	ctx          *gin.Context
-	data         any
-	withoutCheck bool
-}
-
-func (server *Endpoints) bindQuery(in validationInput) error {
-	if err := in.ctx.ShouldBindQuery(in.data); err != nil {
+func bindQuery(ctx *gin.Context, data any, withCheck bool) error {
+	if err := ctx.ShouldBindQuery(data); err != nil {
 		// server.Logger.Errorf("cannot bind request %v", err)
-		if !in.withoutCheck {
-			in.ctx.AbortWithStatusJSON(http.StatusBadRequest, jsonResponse[any]{
+		if withCheck {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, jsonResponse[any]{
 				Error:   true,
 				Message: "validation error",
 				Data:    err.Error(),
@@ -32,27 +26,11 @@ func (server *Endpoints) bindQuery(in validationInput) error {
 	}
 	return nil
 }
-func (server *Endpoints) bindJSON(in validationInput) error {
-	if err := in.ctx.ShouldBindJSON(in.data); err != nil {
+func bindJSON(ctx *gin.Context, data any, withCheck bool) error {
+	if err := ctx.ShouldBindJSON(data); err != nil {
 		// server.Logger.Errorf("cannot bind request %v", err)
-		if !in.withoutCheck {
-			in.ctx.AbortWithStatusJSON(http.StatusBadRequest, jsonResponse[any]{
-				Error:   true,
-				Message: "validation error",
-				Data:    err.Error(),
-			})
-		}
-		return err
-	}
-	return nil
-}
-
-func (server *Endpoints) bindUri(in validationInput) error {
-	if err := in.ctx.ShouldBindUri(in.data); err != nil {
-		// server.Logger.Errorf("cannot bind request %v", err)
-
-		if !in.withoutCheck {
-			in.ctx.AbortWithStatusJSON(http.StatusBadRequest, jsonResponse[any]{
+		if withCheck {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, jsonResponse[any]{
 				Error:   true,
 				Message: "validation error",
 				Data:    err.Error(),
@@ -63,7 +41,23 @@ func (server *Endpoints) bindUri(in validationInput) error {
 	return nil
 }
 
-// func (server *Endpoints) sendError(ctx *gin.Context, err error, s int, message ...string) {
+func bindUri(ctx *gin.Context, data any, withCheck bool) error {
+	if err := ctx.ShouldBindUri(data); err != nil {
+		// server.Logger.Errorf("cannot bind request %v", err)
+
+		if withCheck {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, jsonResponse[any]{
+				Error:   true,
+				Message: "validation error",
+				Data:    err.Error(),
+			})
+		}
+		return err
+	}
+	return nil
+}
+
+// func sendError(ctx *gContext, err error, s int, message ...string) {
 // 	// server.Logger.Errorf("request error with status %v: %v", s, err)
 // 	if len(message) > 0 {
 // 		ctx.AbortWithStatusJSON(s, jsonResponse[any]{
@@ -80,7 +74,7 @@ func (server *Endpoints) bindUri(in validationInput) error {
 // 	})
 // }
 
-func (server *Endpoints) sendResponse(ctx *gin.Context, status int, data any) {
+func sendResponse(ctx *gin.Context, status int, data any) {
 	ctx.JSON(status, jsonResponse[any]{
 		Error:   false,
 		Message: "success",

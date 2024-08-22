@@ -1,10 +1,10 @@
 package dogApi
 
 import (
+	"app/internal/util"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"go-webserver/internal/util"
 	"io"
 	"net/http"
 	"strconv"

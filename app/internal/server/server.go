@@ -1,23 +1,23 @@
 package server
 
 import (
-	"go-webserver/internal/server/endpoints"
-	"go-webserver/internal/util"
+	"app/internal/server/handler"
+	"app/internal/server/service"
+	"app/internal/util"
 	"net/http"
 	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
-	docs "go-webserver/docs"
+	docs "app/docs"
 
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Server struct {
-	endpoints *endpoints.Endpoints
-	config    *util.MainConfig
+	config *util.MainConfig
 }
 
 func CreateServer(config *util.MainConfig) (*http.Server, error) {
@@ -54,8 +54,7 @@ func setSwaggerDocs(config *util.MainConfig) {
 
 func setupRouter(config *util.MainConfig) *gin.Engine {
 	server := &Server{
-		config:    config,
-		endpoints: endpoints.CreateEndpoints(config),
+		config: config,
 	}
 	setSwaggerDocs(server.config)
 
@@ -66,7 +65,17 @@ func setupRouter(config *util.MainConfig) *gin.Engine {
 	// use ginSwagger middleware to serve the API docs
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	server.endpoints.AddRoutes(router)
+	// Services
+	heartbeatService := service.NewHeartbeatService()
+	sumService := service.NewSumService()
+
+	// Create handlers
+	heartbeatHandlers := handler.NewHeartbeatHandler(heartbeatService)
+	sumHandlers := handler.NewSumHandler(sumService)
+
+	// Create routes
+	heartbeatHandlers.AddRoutes(router)
+	sumHandlers.AddRoutes(router)
 
 	return router
 }

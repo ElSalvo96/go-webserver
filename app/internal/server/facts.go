@@ -1,7 +1,7 @@
 package server
 
 import (
-	"go-webserver/internal/server/dogApi"
+	"app/internal/server/dogApi"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

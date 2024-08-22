@@ -4,9 +4,9 @@ package main
 // Import any modules required
 
 import (
+	"app/internal/server"
+	"app/internal/util"
 	"context"
-	"go-webserver/internal/server"
-	"go-webserver/internal/util"
 	"net/http"
 	"os"
 	"os/signal"
