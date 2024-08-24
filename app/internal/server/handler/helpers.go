@@ -57,22 +57,22 @@ func bindUri(ctx *gin.Context, data any, withCheck bool) error {
 	return nil
 }
 
-// func sendError(ctx *gContext, err error, s int, message ...string) {
-// 	// server.Logger.Errorf("request error with status %v: %v", s, err)
-// 	if len(message) > 0 {
-// 		ctx.AbortWithStatusJSON(s, jsonResponse[any]{
-// 			Error:   true,
-// 			Message: message[0],
-// 			Data:    err.Error(),
-// 		})
-// 		return
-// 	}
-// 	ctx.AbortWithStatusJSON(s, jsonResponse[any]{
-// 		Error:   true,
-// 		Message: "something went wrong",
-// 		Data:    err.Error(),
-// 	})
-// }
+func sendError(ctx *gin.Context, err error, s int, message ...string) {
+	// server.Logger.Errorf("request error with status %v: %v", s, err)
+	if len(message) > 0 {
+		ctx.AbortWithStatusJSON(s, jsonResponse[any]{
+			Error:   true,
+			Message: message[0],
+			Data:    err.Error(),
+		})
+		return
+	}
+	ctx.AbortWithStatusJSON(s, jsonResponse[any]{
+		Error:   true,
+		Message: "something went wrong",
+		Data:    err.Error(),
+	})
+}
 
 func sendResponse(ctx *gin.Context, status int, data any) {
 	ctx.JSON(status, jsonResponse[any]{

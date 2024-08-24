@@ -18,6 +18,7 @@ type MainConfig struct {
 	SERVER_ADDRESS   string `mapstructure:"SERVER_ADDRESS"`
 	GIN_MODE         string `mapstructure:"GIN_MODE"`
 	DOG_API_BASE_URL string `mapstructure:"DOG_API_BASE_URL"`
+	CAT_API_BASE_URL string `mapstructure:"CAT_API_BASE_URL"`
 }
 
 func GetConfig() *MainConfig {

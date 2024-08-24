@@ -68,14 +68,17 @@ func setupRouter(config *util.MainConfig) *gin.Engine {
 	// Services
 	heartbeatService := service.NewHeartbeatService()
 	sumService := service.NewSumService()
+	factsService := service.NewFactsService(config)
 
 	// Create handlers
 	heartbeatHandlers := handler.NewHeartbeatHandler(heartbeatService)
 	sumHandlers := handler.NewSumHandler(sumService)
+	factsHandlers := handler.NewFactsHandler(factsService)
 
 	// Create routes
 	heartbeatHandlers.AddRoutes(router)
 	sumHandlers.AddRoutes(router)
+	factsHandlers.AddRoutes(router)
 
 	return router
 }

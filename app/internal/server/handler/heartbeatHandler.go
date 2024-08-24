@@ -21,18 +21,18 @@ func NewHeartbeatHandler(service service.HeartbeatService) *HeartbeatHandler {
 
 // NewHeartbeatHandler creates a new instance of HeartbeatHandler
 func (h *HeartbeatHandler) AddRoutes(r *gin.Engine) {
-	// heartbeat godoc
-	//	@Summary		Heartbeat
-	//	@Description	Heartbeat
-	//	@Tags			heartbeat
-	//	@Accept			json
-	//	@Produce		json
-	//	@Success		200	{object}	jsonResponse[string]
-	//	@Router			/heartbeat [get]
 	r.GET("/heartbeat", h.Handle)
 }
 
-// Handle returns a JSON response with the heartbeat status
+// heartbeat godoc
+//
+//	@Summary		Heartbeat returns a JSON response with the heartbeat status
+//	@Description	Heartbeat returns a JSON response with the heartbeat status
+//	@Tags			heartbeat
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	jsonResponse[string]
+//	@Router			/heartbeat [get]
 func (h *HeartbeatHandler) Handle(c *gin.Context) {
 	status := h.service.Check()
 

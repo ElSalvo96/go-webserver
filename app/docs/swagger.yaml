@@ -8,6 +8,26 @@ definitions:
       message:
         type: string
     type: object
+  Response-array_handler_FactResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/handler.FactResponse'
+        type: array
+      error:
+        type: boolean
+      message:
+        type: string
+    type: object
+  Response-handler_FactResponse:
+    properties:
+      data:
+        $ref: '#/definitions/handler.FactResponse'
+      error:
+        type: boolean
+      message:
+        type: string
+    type: object
   Response-string:
     properties:
       data:
@@ -32,9 +52,54 @@ definitions:
       result:
         type: integer
     type: object
+  handler.FactResponse:
+    properties:
+      id:
+        type: string
+      text:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
+  /api/v1/facts/cats:
+    get:
+      consumes:
+      - application/json
+      description: Facts about cats
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response-array_handler_FactResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/Response-string'
+      summary: Facts about cats
+      tags:
+      - Facts
+  /api/v1/facts/dogs:
+    get:
+      consumes:
+      - application/json
+      description: Facts about dogs
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response-handler_FactResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/Response-string'
+      summary: Facts about dogs
+      tags:
+      - Facts
   /api/v1/sum:
     get:
       consumes:
@@ -151,4 +216,19 @@ paths:
       summary: Handle the sum service using the route path
       tags:
       - sum
+  /heartbeat:
+    get:
+      consumes:
+      - application/json
+      description: Heartbeat returns a JSON response with the heartbeat status
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response-string'
+      summary: Heartbeat returns a JSON response with the heartbeat status
+      tags:
+      - heartbeat
 swagger: "2.0"

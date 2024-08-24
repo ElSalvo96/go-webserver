@@ -1,0 +1,7 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Date: Sat, 24 Aug 2024 16:46:41 GMT
+Content-Length: 167
+Connection: close
+
+{"error":false,"message":"success","data":{"data":[{"id":"3e08b410-91ec-4682-8ab8-881082a7b787","type":"fact","attributes":{"body":"Dogs do not have an appendix."}}]}}

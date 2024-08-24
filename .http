@@ -2,7 +2,9 @@
 ###
 GET http://localhost:8080/heartbeat
 ###
-GET http://localhost:8080/api/v1/facts
+GET http://localhost:8080/api/v1/facts/dogs
+###
+GET http://localhost:8080/api/v1/facts/cats
 ###
 GET http://localhost:8080/api/v1/sum?num1=10&num2=20
 ###

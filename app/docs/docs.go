@@ -15,6 +15,64 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/facts/cats": {
+            "get": {
+                "description": "Facts about cats",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Facts"
+                ],
+                "summary": "Facts about cats",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Response-array_handler_FactResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/Response-string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/facts/dogs": {
+            "get": {
+                "description": "Facts about dogs",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Facts"
+                ],
+                "summary": "Facts about dogs",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Response-handler_FactResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/Response-string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/sum": {
             "get": {
                 "description": "Handle the sum service using the query string",
@@ -187,6 +245,29 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/heartbeat": {
+            "get": {
+                "description": "Heartbeat returns a JSON response with the heartbeat status",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "heartbeat"
+                ],
+                "summary": "Heartbeat returns a JSON response with the heartbeat status",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Response-string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -195,6 +276,37 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "$ref": "#/definitions/SumOutput"
+                },
+                "error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "Response-array_handler_FactResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handler.FactResponse"
+                    }
+                },
+                "error": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "Response-handler_FactResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/handler.FactResponse"
                 },
                 "error": {
                     "type": "boolean"
@@ -238,6 +350,17 @@ const docTemplate = `{
             "properties": {
                 "result": {
                     "type": "integer"
+                }
+            }
+        },
+        "handler.FactResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "text": {
+                    "type": "string"
                 }
             }
         }
