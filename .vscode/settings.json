@@ -4,6 +4,7 @@
 		"gonic",
 		"Infof",
 		"logrus",
+		"mapstructure",
 		"swaggerfiles",
 		"swaggo"
 	]

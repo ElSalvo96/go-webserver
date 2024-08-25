@@ -7,6 +7,7 @@ import (
 	"app/internal/server"
 	"app/internal/util"
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -17,8 +18,34 @@ import (
 )
 
 // Define the main function
+// @Version 1.0.0
+// @Title Backend API
+// @Description API usually works as expected. But sometimes its not true.
+// @ContactName Parvez
+// @ContactEmail abce@email.com
+// @ContactURL http://someurl.oxox
+// @TermsOfServiceUrl http://someurl.oxox
+// @LicenseName MIT
+// @LicenseURL https://en.wikipedia.org/wiki/MIT_License
+// @Server http://www.fake.com Server-1
+// @Server http://www.fake2.com Server-2
+// @Security AuthorizationHeader read write
+// @SecurityScheme AuthorizationHeader http bearer Input your token
+//
+// @securitydefinitions.oauth2.accessCode  OAuth2AccessCode
+// @in                           		   header
+// @name                         		   Authorization
+// @tokenUrl                               https://127.0.0.1:8080/api/v1/auth/login
+// @authorizationUrl                       https://127.0.0.1:8080/api/v1/auth/login
 func main() {
-	cfg, err := util.LoadConfig(".")
+
+	if len(os.Args) < 2 {
+		fmt.Println("Please provide the environment path as an argument.")
+		return
+	}
+
+	fmt.Println("PID:", os.Getpid())
+	cfg, err := util.LoadConfig(os.Args[1])
 	if err != nil {
 		logrus.Panicf("Cannot load config %v", err)
 		return

@@ -20,8 +20,8 @@ func NewFactsHandler(service service.FactsService) *FactsHandler {
 }
 
 // NewFactsHandler creates a new instance of FactsHandler
-func (h *FactsHandler) AddRoutes(r *gin.Engine) {
-	v1 := r.Group("/api/v1/facts")
+func (h *FactsHandler) AddRoutes(r *gin.Engine, authMiddleware gin.HandlerFunc) {
+	v1 := r.Group("/api/v1/facts", authMiddleware)
 
 	v1.GET("/dogs", h.HandleDogs)
 	v1.GET("/cats", h.HandleCats)

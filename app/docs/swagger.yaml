@@ -28,6 +28,15 @@ definitions:
       message:
         type: string
     type: object
+  Response-handler_loginResponse:
+    properties:
+      data:
+        $ref: '#/definitions/handler.loginResponse'
+      error:
+        type: boolean
+      message:
+        type: string
+    type: object
   Response-string:
     properties:
       data:
@@ -59,9 +68,104 @@ definitions:
       text:
         type: string
     type: object
+  handler.loginInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  handler.loginResponse:
+    properties:
+      refresh_token:
+        type: string
+      token:
+        type: string
+    type: object
+  handler.refreshTokenInput:
+    properties:
+      refresh_token:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
+  /api/v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Handle login and generate token and refresh token
+      parameters:
+      - description: Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.loginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response-handler_loginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response-string'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Response-string'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/Response-string'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/Response-string'
+      summary: Handle login and generate token and refresh token
+      tags:
+      - Auth
+  /api/v1/auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Regenerate token and refresh token
+      parameters:
+      - description: Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.refreshTokenInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response-handler_loginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response-string'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Response-string'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/Response-string'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/Response-string'
+      summary: Regenerate token and refresh token
+      tags:
+      - Auth
   /api/v1/facts/cats:
     get:
       consumes:
@@ -78,6 +182,8 @@ paths:
           description: Service Unavailable
           schema:
             $ref: '#/definitions/Response-string'
+      security:
+      - OAuth2AccessCode: []
       summary: Facts about cats
       tags:
       - Facts
@@ -97,6 +203,8 @@ paths:
           description: Service Unavailable
           schema:
             $ref: '#/definitions/Response-string'
+      security:
+      - OAuth2AccessCode: []
       summary: Facts about dogs
       tags:
       - Facts
@@ -231,4 +339,10 @@ paths:
       summary: Heartbeat returns a JSON response with the heartbeat status
       tags:
       - heartbeat
+securityDefinitions:
+  OAuth2AccessCode:
+    authorizationUrl: https://127.0.0.1:8080/api/v1/auth/login
+    flow: accessCode
+    tokenUrl: https://127.0.0.1:8080/api/v1/auth/login
+    type: oauth2
 swagger: "2.0"

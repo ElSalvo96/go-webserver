@@ -19,6 +19,11 @@ type MainConfig struct {
 	GIN_MODE         string `mapstructure:"GIN_MODE"`
 	DOG_API_BASE_URL string `mapstructure:"DOG_API_BASE_URL"`
 	CAT_API_BASE_URL string `mapstructure:"CAT_API_BASE_URL"`
+
+	JWT_TOKEN_SECRET_KEY             string `mapstructure:"JWT_TOKEN_SECRET_KEY"`
+	JWT_TOKEN_EXPIRE_MINUTES         uint8  `mapstructure:"JWT_TOKEN_EXPIRE_MINUTES"`
+	JWT_REFRESH_TOKEN_SECRET_KEY     string `mapstructure:"JWT_REFRESH_TOKEN_SECRET_KEY"`
+	JWT_REFRESH_TOKEN_EXPIRE_MINUTES uint8  `mapstructure:"JWT_REFRESH_TOKEN_EXPIRE_MINUTES"`
 }
 
 func GetConfig() *MainConfig {

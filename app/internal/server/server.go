@@ -2,6 +2,7 @@ package server
 
 import (
 	"app/internal/server/handler"
+	"app/internal/server/middleware"
 	"app/internal/server/service"
 	"app/internal/util"
 	"net/http"
@@ -48,8 +49,8 @@ func setSwaggerDocs(config *util.MainConfig) {
 	docs.SwaggerInfo.Description = "This is a sample server."
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.Host = config.SERVER_ADDRESS
-	// docs.SwaggerInfo.BasePath = "/v2"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+
 }
 
 func setupRouter(config *util.MainConfig) *gin.Engine {
@@ -69,16 +70,23 @@ func setupRouter(config *util.MainConfig) *gin.Engine {
 	heartbeatService := service.NewHeartbeatService()
 	sumService := service.NewSumService()
 	factsService := service.NewFactsService(config)
+	userService := service.NewUserService()
+	authService := service.NewAuthService(config)
+
+	// Creates middlewares
+	authMiddleware := middleware.NewAuthMiddleware(userService, authService)
 
 	// Create handlers
 	heartbeatHandlers := handler.NewHeartbeatHandler(heartbeatService)
 	sumHandlers := handler.NewSumHandler(sumService)
 	factsHandlers := handler.NewFactsHandler(factsService)
+	authHandlers := handler.NewAuthHandler(userService, authService)
 
 	// Create routes
 	heartbeatHandlers.AddRoutes(router)
 	sumHandlers.AddRoutes(router)
-	factsHandlers.AddRoutes(router)
+	factsHandlers.AddRoutes(router, authMiddleware)
+	authHandlers.AddRoutes(router)
 
 	return router
 }
