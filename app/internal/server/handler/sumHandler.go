@@ -20,7 +20,7 @@ func NewSumHandler(sumService service.SumService) *SumHandler {
 }
 
 // NewSumHandler creates a new instance of SumHandler
-func (h *SumHandler) AddRoutes(r *gin.Engine) {
+func (h *SumHandler) AddRoutes(r *gin.RouterGroup) {
 	v1 := r.Group("/api/v1")
 
 	v1.GET("/sum", h.SumQuery)

@@ -20,8 +20,8 @@ func NewFactsHandler(service service.FactsService) *FactsHandler {
 }
 
 // NewFactsHandler creates a new instance of FactsHandler
-func (h *FactsHandler) AddRoutes(r *gin.Engine, authMiddleware gin.HandlerFunc) {
-	v1 := r.Group("/api/v1/facts", authMiddleware)
+func (h *FactsHandler) AddRoutes(r *gin.RouterGroup) {
+	v1 := r.Group("/api/v1/facts")
 
 	v1.GET("/dogs", h.HandleDogs)
 	v1.GET("/cats", h.HandleCats)
@@ -69,6 +69,7 @@ func (h *FactsHandler) HandleDogs(c *gin.Context) {
 //	@Accept			json
 //	@Produce		json
 //	@Success		200		{object}	jsonResponse[[]FactResponse]
+//	@Failure		401		{object}	jsonResponse[string]
 //	@Failure		503		{object}	jsonResponse[string]
 //	@Router			/api/v1/facts/cats [get]
 func (h *FactsHandler) HandleCats(c *gin.Context) {

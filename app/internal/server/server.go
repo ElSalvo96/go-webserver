@@ -82,11 +82,14 @@ func setupRouter(config *util.MainConfig) *gin.Engine {
 	factsHandlers := handler.NewFactsHandler(factsService)
 	authHandlers := handler.NewAuthHandler(userService, authService)
 
+	routerWithoutAuth := router.Group("")
+	routerWithAuth := router.Group("", authMiddleware)
+
 	// Create routes
-	heartbeatHandlers.AddRoutes(router)
-	sumHandlers.AddRoutes(router)
-	factsHandlers.AddRoutes(router, authMiddleware)
-	authHandlers.AddRoutes(router)
+	heartbeatHandlers.AddRoutes(routerWithoutAuth)
+	sumHandlers.AddRoutes(routerWithAuth)
+	factsHandlers.AddRoutes(routerWithAuth)
+	authHandlers.AddRoutes(routerWithoutAuth)
 
 	return router
 }

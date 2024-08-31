@@ -20,7 +20,7 @@ func NewHeartbeatHandler(service service.HeartbeatService) *HeartbeatHandler {
 }
 
 // NewHeartbeatHandler creates a new instance of HeartbeatHandler
-func (h *HeartbeatHandler) AddRoutes(r *gin.Engine) {
+func (h *HeartbeatHandler) AddRoutes(r *gin.RouterGroup) {
 	r.GET("/heartbeat", h.Handle)
 }
 

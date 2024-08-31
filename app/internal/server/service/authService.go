@@ -5,6 +5,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	jwt "github.com/golang-jwt/jwt/v5"
 	"github.com/mitchellh/mapstructure"
 )
@@ -15,10 +16,9 @@ type DataClaims struct {
 
 // AuthService defines an interface for the health check service
 type AuthService interface {
-	CreateToken(username string) (string, error)
-	CreateRefreshToken(username string) (string, error)
-	VerifyToken(tokenString string) (*DataClaims, error)
-	VerifyRefreshToken(tokenString string) (*DataClaims, error)
+	ClearAuthCookies(c *gin.Context)
+	VerifyAuthCookies(c *gin.Context) (bool, *DataClaims)
+	SetAuthCookies(c *gin.Context, username string) error
 }
 
 // AuthServiceImpl is a concrete implementation of the AuthService interface
@@ -30,22 +30,6 @@ func NewAuthService(config *util.MainConfig) AuthService {
 	return &AuthServiceImpl{
 		config: config,
 	}
-}
-
-func (h *AuthServiceImpl) CreateToken(username string) (string, error) {
-	return h.createToken(username, h.config.JWT_TOKEN_SECRET_KEY, h.config.JWT_TOKEN_EXPIRE_MINUTES)
-}
-
-func (h *AuthServiceImpl) CreateRefreshToken(username string) (string, error) {
-	return h.createToken(username, h.config.JWT_REFRESH_TOKEN_SECRET_KEY, h.config.JWT_REFRESH_TOKEN_EXPIRE_MINUTES)
-}
-
-func (h *AuthServiceImpl) VerifyToken(tokenString string) (*DataClaims, error) {
-	return h.verifyToken(tokenString, h.config.JWT_TOKEN_SECRET_KEY)
-}
-
-func (h *AuthServiceImpl) VerifyRefreshToken(tokenString string) (*DataClaims, error) {
-	return h.verifyToken(tokenString, h.config.JWT_REFRESH_TOKEN_SECRET_KEY)
 }
 
 func (h *AuthServiceImpl) verifyToken(tokenString string, secretKey string) (*DataClaims, error) {
@@ -78,19 +62,57 @@ func (h *AuthServiceImpl) verifyToken(tokenString string, secretKey string) (*Da
 	return &dataClaims, nil
 }
 
-func (h *AuthServiceImpl) createToken(username string, secretKey string, minutes uint8) (string, error) {
+func (h *AuthServiceImpl) createToken(username string, secretKey string, minutes uint8) (string, int, error) {
+	expireTime := int(time.Now().Add(time.Minute * time.Duration(minutes)).Unix())
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"data": DataClaims{
 				Username: username,
 			},
-			"exp": time.Now().Add(time.Minute * time.Duration(minutes)).Unix(),
+			"exp": expireTime,
 		})
 
 	tokenString, err := token.SignedString([]byte(secretKey))
 	if err != nil {
-		return "", err
+		return "", -1, err
 	}
 
-	return tokenString, nil
+	return tokenString, expireTime, nil
+}
+
+func (h *AuthServiceImpl) SetAuthCookies(c *gin.Context, username string) error {
+	newToken, expireTime, err := h.createToken(username, h.config.JWT_TOKEN_SECRET_KEY, h.config.JWT_TOKEN_EXPIRE_MINUTES)
+
+	if err != nil {
+		return err
+	}
+
+	c.SetCookie("token", newToken, expireTime/1e6, "/", "", true, true)
+
+	return nil
+}
+
+func (h *AuthServiceImpl) VerifyAuthCookies(c *gin.Context) (bool, *DataClaims) {
+	token, err := c.Cookie("token")
+	if err != nil {
+		return false, nil
+	}
+
+	claims, err := h.verifyToken(token, h.config.JWT_TOKEN_SECRET_KEY)
+	if err != nil {
+		return false, nil
+	}
+
+	// Update token with a new one
+	err = h.SetAuthCookies(c, claims.Username)
+
+	if err != nil {
+		return false, nil
+	}
+
+	return true, claims
+}
+
+func (h *AuthServiceImpl) ClearAuthCookies(c *gin.Context) {
+	c.SetCookie("token", "", -1, "/", "", true, true)
 }

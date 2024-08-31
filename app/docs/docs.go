@@ -17,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/api/v1/auth/login": {
             "post": {
-                "description": "Handle login and generate token and refresh token",
+                "description": "Handle login and set the access token into the cookie",
                 "consumes": [
                     "application/json"
                 ],
@@ -27,7 +27,7 @@ const docTemplate = `{
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Handle login and generate token and refresh token",
+                "summary": "Handle login and set the access token into the cookie",
                 "parameters": [
                     {
                         "description": "Body",
@@ -43,7 +43,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/Response-handler_loginResponse"
+                            "$ref": "#/definitions/Response-bool"
                         }
                     },
                     "400": {
@@ -73,51 +73,22 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/auth/refresh": {
-            "post": {
-                "description": "Regenerate token and refresh token",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
+        "/api/v1/auth/logout": {
+            "get": {
+                "description": "Handle logout and clear the access token from the Cookie",
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Regenerate token and refresh token",
-                "parameters": [
-                    {
-                        "description": "Body",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/handler.refreshTokenInput"
-                        }
-                    }
-                ],
+                "summary": "Handle logout and clear the access token from the Cookie",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/Response-handler_loginResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/Response-string"
+                            "$ref": "#/definitions/Response-bool"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/Response-string"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/definitions/Response-string"
                         }
@@ -133,11 +104,6 @@ const docTemplate = `{
         },
         "/api/v1/facts/cats": {
             "get": {
-                "security": [
-                    {
-                        "OAuth2AccessCode": []
-                    }
-                ],
                 "description": "Facts about cats",
                 "consumes": [
                     "application/json"
@@ -156,6 +122,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/Response-array_handler_FactResponse"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Response-string"
+                        }
+                    },
                     "503": {
                         "description": "Service Unavailable",
                         "schema": {
@@ -167,11 +139,6 @@ const docTemplate = `{
         },
         "/api/v1/facts/dogs": {
             "get": {
-                "security": [
-                    {
-                        "OAuth2AccessCode": []
-                    }
-                ],
                 "description": "Facts about dogs",
                 "consumes": [
                     "application/json"
@@ -428,11 +395,11 @@ const docTemplate = `{
                 }
             }
         },
-        "Response-handler_FactResponse": {
+        "Response-bool": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/handler.FactResponse"
+                    "type": "boolean"
                 },
                 "error": {
                     "type": "boolean"
@@ -442,11 +409,11 @@ const docTemplate = `{
                 }
             }
         },
-        "Response-handler_loginResponse": {
+        "Response-handler_FactResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/handler.loginResponse"
+                    "$ref": "#/definitions/handler.FactResponse"
                 },
                 "error": {
                     "type": "boolean"
@@ -514,33 +481,6 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
-        },
-        "handler.loginResponse": {
-            "type": "object",
-            "properties": {
-                "refresh_token": {
-                    "type": "string"
-                },
-                "token": {
-                    "type": "string"
-                }
-            }
-        },
-        "handler.refreshTokenInput": {
-            "type": "object",
-            "properties": {
-                "refresh_token": {
-                    "type": "string"
-                }
-            }
-        }
-    },
-    "securityDefinitions": {
-        "OAuth2AccessCode": {
-            "type": "oauth2",
-            "flow": "accessCode",
-            "authorizationUrl": "https://127.0.0.1:8080/api/v1/auth/login",
-            "tokenUrl": "https://127.0.0.1:8080/api/v1/auth/login"
         }
     }
 }`
