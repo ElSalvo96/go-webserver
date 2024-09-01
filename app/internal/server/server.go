@@ -36,7 +36,7 @@ func CreateServer(config *util.MainConfig) (*http.Server, error) {
 
 func createCORSConfig() cors.Config {
 	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{"*"}
+	corsConfig.AllowOrigins = []string{"http://localhost:5173"}
 	corsConfig.AllowHeaders = []string{"*"}
 	corsConfig.AllowCredentials = true
 	corsConfig.AddAllowHeaders("Access-Control-Allow-Headers", "Access-Control-Allow-Origin", "access-control-allow-origin, access-control-allow-headers", "Content-Type", "Accept", "Origin", "X-Requested-With")

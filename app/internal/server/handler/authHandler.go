@@ -27,6 +27,7 @@ func (h *AuthHandler) AddRoutes(r *gin.RouterGroup) {
 	v1 := r.Group("/api/v1/auth")
 
 	v1.POST("/login", h.HandleLogin)
+	v1.GET("/isLoggedIn", h.HandleIsLoggedIn)
 	v1.GET("/logout", h.HandleLogout)
 }
 
@@ -65,6 +66,25 @@ func (h *AuthHandler) HandleLogin(c *gin.Context) {
 	h.authService.SetAuthCookies(c, inputData.Username)
 
 	sendResponse(c, http.StatusOK, true)
+}
+
+// Auth godoc
+//
+//	@Summary		Handle checking if the user is logged in
+//	@Description	Handle checking if the user is logged in
+//	@Tags			Auth
+//	@Success		200		{object}	jsonResponse[bool]
+//	@Failure		401		{object}	jsonResponse[string]
+//	@Failure		503		{object}	jsonResponse[string]
+//	@Router			/api/v1/auth/isLoggedIn [GET]
+func (h *AuthHandler) HandleIsLoggedIn(c *gin.Context) {
+	claims, err := h.authService.IsAuthCookiesValid(c)
+	if err != nil {
+		sendError(c, err, http.StatusUnauthorized)
+		return
+	}
+	isLoggedIn := claims != nil
+	sendResponse(c, http.StatusOK, isLoggedIn)
 }
 
 // Auth godoc

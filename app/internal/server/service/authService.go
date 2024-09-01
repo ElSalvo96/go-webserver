@@ -18,6 +18,7 @@ type DataClaims struct {
 type AuthService interface {
 	ClearAuthCookies(c *gin.Context)
 	VerifyAuthCookies(c *gin.Context) (bool, *DataClaims)
+	IsAuthCookiesValid(c *gin.Context) (*DataClaims, error)
 	SetAuthCookies(c *gin.Context, username string) error
 }
 
@@ -93,12 +94,8 @@ func (h *AuthServiceImpl) SetAuthCookies(c *gin.Context, username string) error 
 }
 
 func (h *AuthServiceImpl) VerifyAuthCookies(c *gin.Context) (bool, *DataClaims) {
-	token, err := c.Cookie("token")
-	if err != nil {
-		return false, nil
-	}
 
-	claims, err := h.verifyToken(token, h.config.JWT_TOKEN_SECRET_KEY)
+	claims, err := h.IsAuthCookiesValid(c)
 	if err != nil {
 		return false, nil
 	}
@@ -111,6 +108,19 @@ func (h *AuthServiceImpl) VerifyAuthCookies(c *gin.Context) (bool, *DataClaims) 
 	}
 
 	return true, claims
+}
+func (h *AuthServiceImpl) IsAuthCookiesValid(c *gin.Context) (*DataClaims, error) {
+	token, err := c.Cookie("token")
+	if err != nil {
+		return nil, err
+	}
+
+	claims, err := h.verifyToken(token, h.config.JWT_TOKEN_SECRET_KEY)
+	if err != nil {
+		return nil, err
+	}
+
+	return claims, nil
 }
 
 func (h *AuthServiceImpl) ClearAuthCookies(c *gin.Context) {
