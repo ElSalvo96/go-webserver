@@ -1,0 +1,1 @@
+{"type":"object","properties":{"data":{"type":"object","properties":{"result":{"type":"integer"}},"x-readme-ref-name":"SumOutput"},"error":{"type":"boolean"},"message":{"type":"string"}},"x-readme-ref-name":"Response-SumOutput"}
