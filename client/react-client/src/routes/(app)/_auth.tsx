@@ -15,7 +15,11 @@ export const Route = createFileRoute('/(app)/_auth')({
 		}
 	},
 	component: AuthLayout,
-	pendingComponent: () => <LoadingSpinner />,
+	pendingComponent: () => (
+		<MainContainer>
+			<LoadingSpinner />
+		</MainContainer>
+	),
 });
 
 function AuthLayout() {

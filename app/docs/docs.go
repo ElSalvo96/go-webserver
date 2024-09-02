@@ -183,7 +183,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/Response-handler_FactResponse"
+                            "$ref": "#/definitions/Response-array_handler_FactResponse"
                         }
                     },
                     "503": {
@@ -429,20 +429,6 @@ const docTemplate = `{
             "properties": {
                 "data": {
                     "type": "boolean"
-                },
-                "error": {
-                    "type": "boolean"
-                },
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
-        "Response-handler_FactResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/handler.FactResponse"
                 },
                 "error": {
                     "type": "boolean"

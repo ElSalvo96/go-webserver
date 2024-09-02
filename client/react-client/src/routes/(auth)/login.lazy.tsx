@@ -11,5 +11,9 @@ export const Route = createLazyFileRoute('/(auth)/login')({
 			<Login />
 		</MainContainer>
 	),
-	pendingComponent: () => <LoadingSpinner />,
+	pendingComponent: () => (
+		<MainContainer>
+			<LoadingSpinner />
+		</MainContainer>
+	),
 });

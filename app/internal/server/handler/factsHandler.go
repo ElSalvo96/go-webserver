@@ -39,7 +39,7 @@ type FactResponse struct {
 //	@Tags			Facts
 //	@Accept			json
 //	@Produce		json
-//	@Success		200		{object}	jsonResponse[FactResponse[]]
+//	@Success		200		{object}	jsonResponse[[]FactResponse]
 //	@Failure		503		{object}	jsonResponse[string]
 //	@Router			/api/v1/facts/dogs [get]
 func (h *FactsHandler) HandleDogs(c *gin.Context) {

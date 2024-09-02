@@ -20,6 +20,8 @@ import { Route as appAuthImport } from './routes/(app)/_auth'
 // Create Virtual Routes
 
 const appImport = createFileRoute('/(app)')()
+const appAuthFactsDogsLazyImport = createFileRoute('/(app)/_auth/facts/dogs')()
+const appAuthFactsCatsLazyImport = createFileRoute('/(app)/_auth/facts/cats')()
 const appAuthAuthAppLazyImport = createFileRoute('/(app)/_auth/_auth/app')()
 
 // Create/Update Routes
@@ -45,6 +47,24 @@ const appAuthRoute = appAuthImport.update({
   id: '/_auth',
   getParentRoute: () => appRoute,
 } as any)
+
+const appAuthFactsDogsLazyRoute = appAuthFactsDogsLazyImport
+  .update({
+    path: '/facts/dogs',
+    getParentRoute: () => appAuthRoute,
+  } as any)
+  .lazy(() =>
+    import('./routes/(app)/_auth/facts/dogs.lazy').then((d) => d.Route),
+  )
+
+const appAuthFactsCatsLazyRoute = appAuthFactsCatsLazyImport
+  .update({
+    path: '/facts/cats',
+    getParentRoute: () => appAuthRoute,
+  } as any)
+  .lazy(() =>
+    import('./routes/(app)/_auth/facts/cats.lazy').then((d) => d.Route),
+  )
 
 const appAuthAuthAppLazyRoute = appAuthAuthAppLazyImport
   .update({
@@ -94,6 +114,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appAuthAuthAppLazyImport
       parentRoute: typeof appAuthImport
     }
+    '/(app)/_auth/facts/cats': {
+      id: '/_auth/facts/cats'
+      path: '/facts/cats'
+      fullPath: '/facts/cats'
+      preLoaderRoute: typeof appAuthFactsCatsLazyImport
+      parentRoute: typeof appAuthImport
+    }
+    '/(app)/_auth/facts/dogs': {
+      id: '/_auth/facts/dogs'
+      path: '/facts/dogs'
+      fullPath: '/facts/dogs'
+      preLoaderRoute: typeof appAuthFactsDogsLazyImport
+      parentRoute: typeof appAuthImport
+    }
   }
 }
 
@@ -102,7 +136,11 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
   appRoute: appRoute.addChildren({
-    appAuthRoute: appAuthRoute.addChildren({ appAuthAuthAppLazyRoute }),
+    appAuthRoute: appAuthRoute.addChildren({
+      appAuthAuthAppLazyRoute,
+      appAuthFactsCatsLazyRoute,
+      appAuthFactsDogsLazyRoute,
+    }),
   }),
   authLoginRoute,
 })
@@ -130,7 +168,9 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "(app)/_auth.tsx",
       "parent": "/",
       "children": [
-        "/_auth/_auth/app"
+        "/_auth/_auth/app",
+        "/_auth/facts/cats",
+        "/_auth/facts/dogs"
       ]
     },
     "/login": {
@@ -138,6 +178,14 @@ export const routeTree = rootRoute.addChildren({
     },
     "/_auth/_auth/app": {
       "filePath": "(app)/_auth/_auth.app.lazy.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/facts/cats": {
+      "filePath": "(app)/_auth/facts/cats.lazy.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/facts/dogs": {
+      "filePath": "(app)/_auth/facts/dogs.lazy.tsx",
       "parent": "/_auth"
     }
   }

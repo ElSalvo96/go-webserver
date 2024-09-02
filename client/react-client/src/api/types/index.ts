@@ -10,7 +10,6 @@ export * from "./PostApiV1AuthLogin";
 export * from "./PostApiV1Sum";
 export * from "./ResponseArrayHandlerFactResponse";
 export * from "./ResponseBool";
-export * from "./ResponseHandlerFactResponse";
 export * from "./ResponseString";
 export * from "./ResponseSumOutput";
 export * from "./SumInput";

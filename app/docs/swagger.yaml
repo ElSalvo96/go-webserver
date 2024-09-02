@@ -28,15 +28,6 @@ definitions:
       message:
         type: string
     type: object
-  Response-handler_FactResponse:
-    properties:
-      data:
-        $ref: '#/definitions/handler.FactResponse'
-      error:
-        type: boolean
-      message:
-        type: string
-    type: object
   Response-string:
     properties:
       data:
@@ -188,7 +179,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/Response-handler_FactResponse'
+            $ref: '#/definitions/Response-array_handler_FactResponse'
         "503":
           description: Service Unavailable
           schema:
