@@ -11,7 +11,7 @@
 			"mode": "debug",
 			"asRoot": true,
 			"program": "${workspaceFolder}/app/cmd/main.go",
-			"args": [".."]
+			"args": ["../app.env"]
 		},
 		{
 			"name": "Attach to Process",
