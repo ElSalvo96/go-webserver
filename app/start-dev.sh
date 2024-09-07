@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 echo "start the app in watch mode"
-air -c .air.toml
+exec "$@"

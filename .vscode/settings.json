@@ -3,6 +3,7 @@
 		"godoc",
 		"gonic",
 		"Infof",
+		"kubb",
 		"logrus",
 		"mapstructure",
 		"swaggerfiles",

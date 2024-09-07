@@ -3,9 +3,9 @@ testdata_dir = "testdata"
 tmp_dir = "tmp"
 
 [build]
-  args_bin = ["./app.env"]
+  args_bin = [""]
   bin = "./tmp/main"
-  pre_cmd = ["swag init -d ./cmd,./internal/server/handler"]
+  pre_cmd = ["make generate-swagger"]
   cmd = "go build -o ./tmp/main cmd/*.go"
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor", "testdata", "docs"]
@@ -24,7 +24,7 @@ tmp_dir = "tmp"
   post_cmd = []
   rerun = false
   rerun_delay = 500
-  send_interrupt = false
+  send_interrupt = true
   stop_on_error = true
 
 [color]

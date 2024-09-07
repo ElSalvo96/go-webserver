@@ -3,6 +3,7 @@ package service
 import (
 	"app/internal/util"
 	"errors"
+	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -88,7 +89,18 @@ func (h *AuthServiceImpl) SetAuthCookies(c *gin.Context, username string) error 
 		return err
 	}
 
-	c.SetCookie("token", newToken, expireTime/1e6, "/", "", true, true)
+	// c.SetCookie("token", newToken, expireTime/1e6, "/", "", true, true)
+
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     "token",
+		Value:    newToken,
+		SameSite: http.SameSiteStrictMode,
+		Path:     "/",
+		Secure:   true,
+		HttpOnly: true,
+		MaxAge:   expireTime,
+		Domain:   h.config.CLIENT_COOKIE_DOMAIN,
+	})
 
 	return nil
 }
@@ -124,5 +136,15 @@ func (h *AuthServiceImpl) IsAuthCookiesValid(c *gin.Context) (*DataClaims, error
 }
 
 func (h *AuthServiceImpl) ClearAuthCookies(c *gin.Context) {
-	c.SetCookie("token", "", -1, "/", "", true, true)
+	// c.SetCookie("token", "", -1, "", "", true, true)
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     "token",
+		Value:    "",
+		SameSite: http.SameSiteStrictMode,
+		Path:     "/",
+		Secure:   true,
+		HttpOnly: true,
+		MaxAge:   -1,
+		Domain:   h.config.CLIENT_COOKIE_DOMAIN,
+	})
 }

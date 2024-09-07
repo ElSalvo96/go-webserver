@@ -19,14 +19,7 @@ import (
 
 func main() {
 	fmt.Println("PID2:", os.Getpid())
-	fmt.Println("ARGS:", os.Args)
-
-	if len(os.Args) < 2 {
-		fmt.Println("Please provide the environment path as an argument.")
-		return
-	}
-
-	cfg, err := util.LoadConfig(os.Args[1])
+	cfg, err := util.LoadConfig()
 	if err != nil {
 		logrus.Panicf("Cannot load config %v", err)
 		return

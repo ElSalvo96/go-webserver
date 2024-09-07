@@ -1,0 +1,54 @@
+services:
+  # postgres:
+  #   image: postgres:12-alpine
+  #   environment:
+  #     - POSTGRES_USER=root
+  #     - POSTGRES_PASSWORD=secret
+  #     - POSTGRES_DB=fantasia
+  #     - PG_ISOLATION_LEVEL=serializable
+  #   ports:
+  #     - "5433:5432"
+  app:
+    build:
+      context: ./app
+      dockerfile: ./Dockerfile-dev
+    ports:
+      - '8080:8080'
+    # depends_on:
+    #   - postgres
+    volumes:
+      - ./app:/app
+    networks:
+      - app
+    command: ['air']
+    entrypoint: ['/app/start-dev.sh']
+
+    environment:
+      - SERVER_ADDRESS=0.0.0.0:8080
+      - SERVER_ADDRESS_EXTERNAL=localhost:8080
+      - CORS_ALLOW_ORIGINS=http://0.0.0.0:5173,http://localhost:8080,http://localhost:5173,http://127.0.0.1:5173
+      - CLIENT_COOKIE_DOMAIN=
+      - GIN_MODE=debug
+      - DOG_API_BASE_URL=https://dogapi.dog/api/v2/
+      - CAT_API_BASE_URL=https://cat-fact.herokuapp.com/
+      - JWT_TOKEN_SECRET_KEY=secret_token_test
+      - JWT_TOKEN_EXPIRE_MINUTES=20
+  react-client:
+    build:
+      context: ./client/react-client
+      dockerfile: ./Dockerfile-dev
+    ports:
+      - '5173:5173'
+    depends_on:
+      - app
+    volumes:
+      - ./client/react-client:/client/react-client
+      - ./app/docs:/client/react-client/api/docs
+    networks:
+      - app
+    environment:
+      - VITE_SERVER_ADDRESS=http://127.0.0.1:8080
+      - VITE_SERVER_ADDRESS_SWAGGER=http://app:8080/swagger/doc.json
+
+networks:
+  app:

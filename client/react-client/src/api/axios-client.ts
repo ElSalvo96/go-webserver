@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 export const axiosClient = axios.create({
-	baseURL: 'http://localhost:8080',
+	baseURL: import.meta.env.VITE_SERVER_ADDRESS,
 	withCredentials: true,
 });
 export default axiosClient;

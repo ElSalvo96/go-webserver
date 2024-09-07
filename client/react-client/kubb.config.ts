@@ -3,19 +3,14 @@ import { pluginOas } from '@kubb/plugin-oas';
 import { pluginTanstackQuery } from '@kubb/swagger-tanstack-query';
 import { pluginTs } from '@kubb/swagger-ts';
 
-// Get args
-const baseUrl = process.argv[4];
-
 export default defineConfig(async () => {
-	const swagger = await fetch(`${baseUrl}/swagger/doc.json`).then((res) =>
-		res.json()
+	const sw = await fetch(process.env.VITE_SERVER_ADDRESS_SWAGGER || '').then(
+		(res) => res.json()
 	);
-	// export default client.create({ baseURL: 'http://localhost:8080' });
-
 	return {
 		root: '.',
 		input: {
-			data: swagger,
+			data: sw,
 			// path: './petStore.yaml',
 		},
 		output: {
@@ -23,7 +18,7 @@ export default defineConfig(async () => {
 			clean: true,
 		},
 		hooks: {
-			done: `bun run create-axios-client.ts ./src/api/axios-client.ts ${baseUrl}`,
+			done: `bun run create-axios-client.ts ./src/api/axios-client.ts`,
 		},
 		plugins: [
 			pluginOas(),

@@ -2,12 +2,11 @@ import { unlinkSync } from 'node:fs';
 
 // Get args
 const filePath = process.argv[2];
-const baseUrl = process.argv[3];
 
 const fileToWrite = `
 import axios from 'axios';
 export const axiosClient = axios.create({
-	baseURL: '${baseUrl}',
+	baseURL: import.meta.env.VITE_SERVER_ADDRESS,
 	withCredentials: true,
 });
 export default axiosClient;

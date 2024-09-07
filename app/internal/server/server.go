@@ -6,6 +6,7 @@ import (
 	"app/internal/server/service"
 	"app/internal/util"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -34,9 +35,9 @@ func CreateServer(config *util.MainConfig) (*http.Server, error) {
 	return srv, nil
 }
 
-func createCORSConfig() cors.Config {
+func createCORSConfig(config *util.MainConfig) cors.Config {
 	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{"http://localhost:5173"}
+	corsConfig.AllowOrigins = strings.Split(config.CORS_ALLOW_ORIGINS, ",")
 	corsConfig.AllowHeaders = []string{"*"}
 	corsConfig.AllowCredentials = true
 	corsConfig.AddAllowHeaders("Access-Control-Allow-Headers", "Access-Control-Allow-Origin", "access-control-allow-origin, access-control-allow-headers", "Content-Type", "Accept", "Origin", "X-Requested-With")
@@ -48,7 +49,7 @@ func setSwaggerDocs(config *util.MainConfig) {
 	docs.SwaggerInfo.Title = "Swagger API"
 	docs.SwaggerInfo.Description = "This is a sample server."
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = config.SERVER_ADDRESS
+	docs.SwaggerInfo.Host = config.SERVER_ADDRESS_EXTERNAL
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 }
@@ -61,7 +62,7 @@ func setupRouter(config *util.MainConfig) *gin.Engine {
 
 	router := gin.Default()
 	router.Use(gin.Recovery())
-	router.Use(cors.New(createCORSConfig()))
+	router.Use(cors.New(createCORSConfig(config)))
 
 	// use ginSwagger middleware to serve the API docs
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))

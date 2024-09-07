@@ -1,0 +1,21 @@
+# Development
+
+## Starting the app with docker for dev purposes
+
+The dev environment uses dev version of docker compose and Dockerfile.
+_Hot Reloading is enabled, bind mounting is enabled from app folder of host to app folder of container._
+
+Note that if you change a file the host machine will be affected with the new version, likewise if you change
+something into the host machine, the local machine will be affected.
+
+From the main folder:
+
+```
+make build-dev
+```
+
+Start the app with:
+
+```
+make run-dev
+```

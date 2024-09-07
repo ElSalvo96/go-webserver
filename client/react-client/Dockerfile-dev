@@ -1,0 +1,21 @@
+# Use the official Bun image
+FROM oven/bun:latest
+
+RUN apt-get update && apt-get install -y inotify-tools
+
+# Set the working directory
+WORKDIR /client/react-client
+
+# Copy package.json and bun.lockb
+COPY package.json bun.lockb ./
+
+# Install dependencies
+RUN bun install
+
+# Copy the rest of the application files
+COPY . .
+
+# Expose the port that Vite uses
+EXPOSE 5173
+
+CMD ["./start-dev.sh"]

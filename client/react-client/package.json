@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "generateApi": "kubb --config kubb.config.ts http://localhost:8080",
+    "generateApi": "kubb --config kubb.config.ts",
     "preview": "vite preview"
   },
   "dependencies": {

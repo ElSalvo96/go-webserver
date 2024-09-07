@@ -1,0 +1,21 @@
+
+# Use the official Go image as a base
+FROM golang:1.23.0-alpine
+
+WORKDIR /app
+
+RUN apk update && apk add make
+
+COPY . .
+RUN go build -o main ./cmd/*.go
+
+# Install air and swaggo
+RUN go install github.com/air-verse/air@latest
+RUN go install github.com/swaggo/swag/cmd/swag@latest
+
+
+# Update go modules
+COPY go.mod go.sum ./
+RUN go mod download
+# Expose port 8080 for the application
+EXPOSE 8080
